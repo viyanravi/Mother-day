@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, CheckCircle2, Footprints, Music, Wind, Droplets, Book, Snowflake, Bike, Waves, Dumbbell, Activity, Trees, Home, Baby, Navigation, Scissors, Coffee, Search, Plus } from 'lucide-react';
+import { Flame, CheckCircle2, Footprints, Music, Wind, Droplets, Book, Snowflake, Bike, Waves, Dumbbell, Activity, Trees, Home, Baby, Navigation, Scissors, Coffee, Search, Plus, Heart } from 'lucide-react';
+import MothersDayHero from './MothersDayHero';
 
 const ExerciseDashboard = ({ 
   streak, 
@@ -92,6 +93,8 @@ const ExerciseDashboard = ({
 
   return (
     <div className="dashboard">
+      <MothersDayHero />
+
       {/* Header with Streak */}
       <div className="flex-center" style={{ justifyContent: 'space-between', marginBottom: '24px' }}>
         <h1 className="rose-gold-text" style={{ fontSize: '28px' }}>MomPower</h1>
