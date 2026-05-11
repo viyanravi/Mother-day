@@ -8,6 +8,9 @@ const DailySpin = ({ momPoints, setMomPoints, playSuccessSound }) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   
+  const sliceValues = [10, 25, 50, 15, 100, 20];
+
+  
   const [lastFreeSpinDate, setLastFreeSpinDate] = useState(() => 
     localStorage.getItem('lastFreeSpinDate') || null
   );
@@ -40,8 +43,16 @@ const DailySpin = ({ momPoints, setMomPoints, playSuccessSound }) => {
     setRotation(newRotation);
 
     setTimeout(() => {
-      // Reward logic based on random stop
-      const reward = Math.floor(Math.random() * 91) + 10;
+      // Calculate which slice we landed on
+      // The arrow is at 0 degrees (top).
+      // The wheel rotates clockwise.
+      // A point on the wheel at degree X ends up at (rotation + X) % 360.
+      // We want to know which X ends up at 0.
+      // So X = (360 - (newRotation % 360)) % 360.
+      const winningDegree = (360 - (newRotation % 360)) % 360;
+      const sliceIndex = Math.floor(winningDegree / 60);
+      const reward = sliceValues[sliceIndex];
+      
       setSpinResult(reward);
       setMomPoints(prev => prev + reward);
       setIsSpinning(false);
@@ -85,10 +96,26 @@ const DailySpin = ({ momPoints, setMomPoints, playSuccessSound }) => {
             background: 'conic-gradient(#f5d6c6 0 60deg, #e1a99a 60deg 120deg, #d4af37 120deg 180deg, #f5d6c6 180deg 240deg, #e1a99a 240deg 300deg, #d4af37 300deg 360deg)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)',
-            border: '6px solid white'
+            border: '6px solid white',
+            position: 'relative'
           }}
         >
-          <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'white', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }} />
+          {sliceValues.map((val, i) => (
+            <div key={i} style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: `translate(-50%, -50%) rotate(${i * 60 + 30}deg) translateY(-40px)`,
+              fontWeight: '900',
+              color: 'white',
+              fontSize: '14px',
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+              pointerEvents: 'none'
+            }}>
+              {val}
+            </div>
+          ))}
+          <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'white', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)', zIndex: 5 }} />
         </motion.div>
       </div>
 
